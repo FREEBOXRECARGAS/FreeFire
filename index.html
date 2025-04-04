@@ -34,6 +34,8 @@
       color: #e0e0e0;
       line-height: 1.6;
       overflow-x: hidden;
+      position: relative;
+      padding-bottom: 60px; /* espacio para el footer */
     }
     /* Animations */
     .fade-in {
@@ -352,6 +354,42 @@
       font-size: 0.95rem;
       margin-top: 15px;
     }
+    /* Botón flotante de soporte técnico */
+    .support-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background-color: #0088cc;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+      transition: transform 0.3s ease;
+    }
+    .support-button:hover {
+      transform: scale(1.1);
+    }
+    .support-button img {
+      width: 70%;
+      height: auto;
+    }
+    /* Footer */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--secondary-dark);
+      color: #ccc;
+      text-align: center;
+      padding: 10px 0;
+      font-size: 0.9rem;
+      z-index: 1000;
+    }
     /* Responsive */
     @media (max-width: 768px) {
       header { padding: 15px 20px; }
@@ -477,6 +515,16 @@
   <div id="loadingOverlay">
     <div class="spinner"></div>
   </div>
+  
+  <!-- Botón flotante de soporte técnico -->
+  <a href="https://t.me/healthra1" target="_blank" class="support-button" title="Soporte Técnico">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Soporte Telegram">
+  </a>
+  
+  <!-- Footer -->
+  <footer>
+    Soporte Técnico vía Telegram | © 2025 FREEBOX
+  </footer>
   
   <script>
     // Mapeo de montos a pagar
@@ -627,4 +675,4 @@
     });
   </script>
 </body>
-</html>
+  </html>
